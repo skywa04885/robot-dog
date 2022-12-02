@@ -21,12 +21,15 @@
 
 namespace app::slam::point_cloud
 {
+  class registrator;
+
   class registrator_builder
   {
   public:
     registrator_builder();
 
   public:
+    registrator build(void) const;
   };
 
   class registrator
@@ -37,14 +40,7 @@ namespace app::slam::point_cloud
       point;
     typedef std::pair<point, unsigned> value;
     typedef boost::geometry::index::rtree<value,
-      boost::geometry::index::quadratic<15>> tree;
-
-    struct execute_result
-    {
-    public:
-      boost::array<double, 2> offsets;
-      double angle;
-    };
+      boost::geometry::index::quadratic<16>> tree;
   public:
     std::valarray<double> execute_compute_partial_derivatives(
       std::valarray<double> &parameters,
@@ -52,7 +48,7 @@ namespace app::slam::point_cloud
       tree &target
     );
 
-    execute_result execute(boost::container::vector<point> &source,
+    boost::tuple<double, double, double> execute(boost::container::vector<point> &source,
                            tree &target);
 
   public:

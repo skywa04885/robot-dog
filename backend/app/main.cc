@@ -1,34 +1,22 @@
 #include "main.h"
+#include <gtkmm/application.h>
 
 #include "slam/point_cloud/registrator.h"
 #include "kinematics/leg.h"
+#include "slam/process.h"
 #include "slam/scanning/lidar.h"
+#include "gui/window.h"
+#include "events/event_bus.h"
+#include "events/event_bus_consumer.h"
 
 int main(int argc, char *argv[])
 {
-  app::slam::point_cloud::registrator reg;
+  app::slam::process::get_instance();
 
-  boost::container::vector<app::slam::point_cloud::registrator::point> source = {
-    {-5., -5.},
-    {5., -5.},
-    {0., 10.}
-  };
-
-  boost::container::vector<app::slam::point_cloud::registrator::value> target = {
-    std::make_pair(app::slam::point_cloud::registrator::point {5., 5.}, 0),
-    std::make_pair(app::slam::point_cloud::registrator::point{-5, 5.}, 1),
-    std::make_pair(app::slam::point_cloud::registrator::point{0., -10.}, 2)
-  };
-
-  app::slam::point_cloud::registrator::tree tree;
-  tree.insert(target.begin(), target.end());
-
-  reg.execute(source, tree);
-
-  auto a = app::slam::scanning::lidar::builder()
-    .set_serial_port("/dev/ttyUSB0")
-    .set_serial_baud(115200).build();
-  
+  BOOST_LOG_TRIVIAL(info) << "Starting GTK3 application";
+  Glib::RefPtr<Gtk::Application> application = Gtk::Application::create(argc, argv, "nl.flukerieff.robot.backend");
+  window window{};
+  return application->run(window);
 
   return 0;
 }

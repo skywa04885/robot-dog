@@ -10,11 +10,8 @@ ARCHIVER ?= $(shell which ar)
 CC_COMPILER ?= $(shell which g++)
 C_COMPILER ?= $(shell which gcc)
 
-INCLUDE_DIRECTORIES += -I./include/rplidar_sdk
+INCLUDE_DIRECTORIES += -I./include/
 INCLUDE_DIRECTORIES += -I./src
-
-C_COMPILER_ARGS += -O3
-CC_COMPILER_ARGS += -O3
 
 OUTPUT_ARCHIVE += ./librplidar.a
 

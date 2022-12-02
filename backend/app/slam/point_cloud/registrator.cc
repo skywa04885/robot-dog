@@ -5,6 +5,10 @@ namespace app::slam::point_cloud
   registrator_builder::registrator_builder()
   {}
 
+  registrator registrator_builder::build(void) const
+  {
+    return {};
+  }
 
   std::valarray<double> registrator::execute_compute_partial_derivatives(
     std::valarray<double> &parameters,
@@ -34,13 +38,13 @@ namespace app::slam::point_cloud
     const auto n = boost::numeric_cast<double>(source.size());
 
     // Creates the value arrays for the points.
-    static std::valarray<double> target_point_i(source.size()),
+    std::valarray<double> target_point_i(source.size()),
       target_point_j(source.size()),
       source_point_i(source.size()),
       source_point_j(source.size());
 
     // Creates the value arrays for the terms.
-    static std::valarray<double> sum_of_squared_differences_term_a(source.size()),
+    std::valarray<double> sum_of_squared_differences_term_a(source.size()),
       sum_of_squared_differences_term_b(source.size()),
       partial_with_respect_to_angle_term_a(source.size()),
       partial_with_respect_to_angle_term_b(source.size());
@@ -113,14 +117,14 @@ namespace app::slam::point_cloud
     return boost::move(result);
   }
 
-  registrator::execute_result registrator::execute(
+  boost::tuple<double, double, double> registrator::execute(
     boost::container::vector<point> &source,
     tree &target)
   {
     std::valarray<double> learning_rate(0.0, 3);
-    learning_rate[0] = 0.1;
-    learning_rate[1] = 0.1;
-    learning_rate[2] = 0.0005;
+    learning_rate[0] = 0.01;
+    learning_rate[1] = 0.01;
+    learning_rate[2] = 0.00001;
     std::valarray<double> parameters(0.0, 3);
 
     for (size_t i = 0; i < 100; ++i)
@@ -145,12 +149,6 @@ namespace app::slam::point_cloud
 
     }
 
-    boost::array<double, 2> offsets{0.0, 0.0};
-    double angle = 0.0;
-
-    return {
-      offsets,
-      angle
-    };
+    return boost::make_tuple(parameters[0], parameters[1], parameters[2]);
   }
 } // namespace app::slam::point_cloud

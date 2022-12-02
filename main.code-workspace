@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "./backend"
+		},
+		{
+			"path": "./frontend"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.tcc": "cpp",
+			"list": "cpp",
+			"numbers": "cpp"
+		}
+	}
+}
